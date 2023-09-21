@@ -50,6 +50,12 @@ plt.xlabel('Time in seconds')
 
 plt.ylabel('Angle in rad')
 
+'''
+ddot plots 
+plt.plot(time, ddoty1, linestyle = 'dashed', color = 'black') # plots phi, azimuthal angle
+plt.plot(time, ddoty2, linestyle = 'dashed', color = 'red', label='approx')
+'''
+
 plt.plot(time, Y1, color = 'black') # plots theta, angle with the normal
 plt.plot(time, Y2, linestyle = 'dashed', color = 'black') # plots phi, azimuthal angle
 plt.grid(True)
