@@ -1,59 +1,80 @@
-#include <stdio.h>
-#include"Header.h"
 #include <iostream>
 #include <cmath>
-using namespace  std ;
-double g=-9.81 ;
 
-pendulum::pendulum(int NUM,double TIME,double THETA,double OMEGA,double DOMEGA,double LENGTH,double MASS)
-{
-    num=NUM;
-    t=TIME;
-    theta=THETA;
-    omega=OMEGA;
-    domega=DOMEGA;
-    length=LENGTH;
-    mass=MASS;
+const double GRAVITY = -9.81;
+
+class Pendulum {
+private:
+    int num;
+    double t;
+    double theta;
+    double omega;
+    double domega;
+    double length;
+    double mass;
+    double x, y, dx, dy, ddx, ddy;
+    double energy, Ep, Ek;
+
+public:
+    // Constructor
+    Pendulum(int NUM, double TIME, double THETA, double OMEGA, double DOMEGA, double LENGTH, double MASS);
+
+    // Member functions
+    void init(int NUM, double TIME, double THETA, double OMEGA, double DOMEGA, double LENGTH, double MASS);
+    void calculateCoordinates();
+    void calculateEnergy();
+    void calculateEp();
+    void calculateEk();
+};
+
+// Constructor definition
+Pendulum::Pendulum(int NUM, double TIME, double THETA, double OMEGA, double DOMEGA, double LENGTH, double MASS)
+    : num(NUM), t(TIME), theta(THETA), omega(OMEGA), domega(DOMEGA), length(LENGTH), mass(MASS) {}
+
+// Initialize function
+void Pendulum::init(int NUM, double TIME, double THETA, double OMEGA, double DOMEGA, double LENGTH, double MASS) {
+    num = NUM;
+    t = TIME;
+    theta = THETA;
+    omega = OMEGA;
+    domega = DOMEGA;
+    length = LENGTH;
+    mass = MASS;
 }
 
-void pendulum::init(int NUM,double TIME,double THETA,double OMEGA,double DOMEGA,double LENGTH,double MASS)
-{
-    num=NUM;
-    t=TIME;
-    theta=THETA;
-    omega=OMEGA;
-    domega=DOMEGA;
-    length=LENGTH;
-    mass=MASS;
+// Calculate coordinates
+void Pendulum::calculateCoordinates() {
+    y = length * cos(theta);
+    x = length * sin(theta);
+    dy = -omega * length * sin(theta);
+    dx = omega * length * cos(theta);
+    ddy = -length * (domega * sin(theta) + pow(omega, 2) * cos(theta));
+    ddx = length * (domega * cos(theta) - pow(omega, 2) * sin(theta));
 }
 
-void pendulum::Energy()
-{
-    double g =-9.81;
-    double Ep = -mass*y*g;
-    double v2 = pow(dx,2)+pow(dy,2);
-    double Ek =0.5*mass*v2;
-    energy=Ep+Ek ;
+// Calculate energy
+void Pendulum::calculateEnergy() {
+    calculateEp();
+    calculateEk();
+    energy = Ep + Ek;
 }
 
-void pendulum::ep()
-{
-    double g=-9.81;
-    Ep=-mass*y*g;
+// Calculate potential energy
+void Pendulum::calculateEp() {
+    Ep = -mass * y * GRAVITY;
 }
 
-void pendulum::ek()
-{
-    double v2 = pow(dx,2)+pow(dy,2);
-    Ek=0.5*mass*v2;
+// Calculate kinetic energy
+void Pendulum::calculateEk() {
+    double v2 = pow(dx, 2) + pow(dy, 2);
+    Ek = 0.5 * mass * v2;
 }
 
-void pendulum::coordinates()
-{
-    y=length*cos(theta);
-    x=length*sin(theta);
-    dy=-omega*length*sin(theta);
-    dx=omega*length*cos(theta);
-    ddy=-length*(domega*sin(theta)+pow(omega,2)*cos(theta));
-    ddx=length*(domega*cos(theta)-pow(omega,2)*sin(theta));
+int main() {
+    // Example usage
+    Pendulum pendulumObj(1, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0);
+    pendulumObj.calculateCoordinates();
+    pendulumObj.calculateEnergy();
+
+    return 0;
 }
